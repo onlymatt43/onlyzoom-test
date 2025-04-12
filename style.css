@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0b1a2f;
+    color: #fff;
+    text-align: center;
+    padding: 40px;
+  }
+  
+  form {
+    background-color: #16263d;
+    padding: 20px;
+    border-radius: 8px;
+    display: inline-block;
+  }
+  
+  input, button {
+    padding: 10px;
+    width: 250px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  input {
+    background-color: #eee;
+  }
+  
+  button {
+    background-color: #2978d1;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+  }
