@@ -52,6 +52,23 @@ app.post("/messages", (req, res) => {
   const { message } = req.body;
   messages.push(message);
   res.sendStatus(200);
-}); app.listen(3000, () => {
-  console.log("✅ ONLYZOOM en ligne sur http://localhost:3000");
+});
+
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
+
+io.on("connection", (socket) => {
+  console.log("✅ Un utilisateur est connecté au chat live");
+
+  socket.on("message", (msg) => {
+    io.emit("message", msg); // retransmet à tout le monde
+  });
+
+  socket.on("disconnect", () => {
+    console.log("❌ Un utilisateur a quitté le chat");
+  });
+});
+
+http.listen(3000, () => {
+  console.log("✅ ONLYZOOM + Chat Live en ligne sur http://localhost:3000");
 });
