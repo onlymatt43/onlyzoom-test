@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>ONLYZOOM Chat Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+    #messages { background: white; padding: 10px; border-radius: 8px; max-height: 300px; overflow-y: auto; margin-bottom: 20px; }
+    input, button { padding: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2>ONLYZOOM - Chat Test</h2>
+  <div id="messages"></div>
+  <input type="text" id="msgInput" placeholder="Écrivez un message..." />
+  <button onclick="sendMessage()">Envoyer</button>
+
+  <script>
+    async function loadMessages() {
+      const res = await fetch('/messages');
+      const data = await res.json();
+      const div = document.getElementById('messages');
+      div.innerHTML = data.map(msg => `<p>${msg}</p>`).join('');
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('msgInput');
+      await fetch('/messages', {
+        method: 'POST,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: input.value })
+      });
+      input.value = '';
+      loadMessages();
+    }
+
+    loadMessages();
+  </script>
+</body>
+</html>

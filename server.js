@@ -38,6 +38,20 @@ app.get("/access", (req, res) => {
   }
 });
 
-app.listen(3000, () => {
+const messages = [];
+
+app.get("/chat.html", (req, res) => {
+  res.sendFile(__dirname + "/chat.html");
+});
+
+app.get("/messages", (req, res) => {
+  res.json(messages);
+});
+
+app.post("/messages", (req, res) => {
+  const { message } = req.body;
+  messages.push(message);
+  res.sendStatus(200);
+}); app.listen(3000, () => {
   console.log("✅ ONLYZOOM en ligne sur http://localhost:3000");
 });
