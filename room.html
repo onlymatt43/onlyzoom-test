@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>ONLYZOOM Room + Chat</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+    h2 { margin-bottom: 10px; }
+    form, #chat { margin-bottom: 30px; }
+    input, button { padding: 10px; font-size: 16px; margin-right: 10px; }
+    #messages { background: white; padding: 10px; border-radius: 8px; max-height: 200px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <h2>🔒 Accès à la session Zoom</h2>
+  <form onsubmit="handleSubmit(event)">
+    <input type="text" id="name" placeholder="Nom" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <label>
+      <input type="checkbox" required />
+      J’accepte les conditions
+    </label>
+    <button type="submit">Accéder</button>
+  </form>
+
+  <hr />
+
+  <h2>💬 Chat en direct</h2>
+  <div id="messages"></div>
+  <input id="msgInput" type="text" placeholder="Message..." />
+  <button onclick="send()">Envoyer</button>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    // Formulaire Zoom
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      if (!name || !email) return;
+
+      const res = await fetch("/generate-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email })
+      });
+
+      const data = await res.json();
+      if (data.token) {
+        window.location.href = `/access?token=${data.token}`;
+      }
+    }
+
+    // Chat Socket.IO
+    const socket = io();
+    const messagesDiv = document.getElementById("messages");
+
+    socket.on("message", (msg) => {
+      const p = document.createElement("p");
+      p.textContent = msg;
+      messagesDiv.appendChild(p);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+
+    function send() {
+      const input = document.getElementById("msgInput");
+      const msg = input.value.trim();
+      if (msg) {
+        socket.emit("message", msg);
+        input.value = "";
+      }
+    }
+  </script>
+</body>
+</html>

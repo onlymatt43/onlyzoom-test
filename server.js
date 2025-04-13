@@ -44,6 +44,14 @@ app.get("/chat.html", (req, res) => {
   res.sendFile(__dirname + "/chat.html");
 });
 
+app.get("/chat-live.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "chat-live.html"));
+});
+
+app.get("/room.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "room.html"));
+});
+
 app.get("/messages", (req, res) => {
   res.json(messages);
 });
